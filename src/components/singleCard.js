@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import img1 from "../images/spidey.jpg";
 import { BsPlusLg, BsThreeDots } from "react-icons/bs";
 import { FaHeart } from "react-icons/fa";
 import RatingCircle from "./ratingCircle";

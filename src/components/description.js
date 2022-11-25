@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import spider from "../images/spidey.jpg";
 import RatingCircle from "./ratingCircle";
 import { BsArrowRight, BsPlusLg, BsThreeDots, BsTwitter } from "react-icons/bs";
 import {
@@ -13,7 +12,6 @@ import { AiFillStar, AiOutlineClose } from "react-icons/ai";
 import { BsPlayFill } from "react-icons/bs";
 import { BiExpand } from "react-icons/bi";
 import SingleCastCard from "./singleCastCard";
-import { data } from "./demoCast";
 import { AiFillInstagram } from "react-icons/ai";
 import { BsFacebook } from "react-icons/bs";
 import axios from "axios";

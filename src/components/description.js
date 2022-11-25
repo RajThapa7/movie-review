@@ -20,12 +20,15 @@ import axios from "axios";
 import tmdb from "../api/tmdb";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { dateFormatter, runTime, yearExtractor } from "./dateFunction";
+import { dateFormatter, moneyFormatter, runTime, yearExtractor } from "./functions";
+import { BeatLoader } from "react-spinners";
 export default function Description() {
+  const [loading, setLoading] = useState(false);
   const shadowStyle = {};
   const [modal, setModal] = useState(false);
   const [description, setDescription] = useState({});
   const [castData, setCastData] = useState([]);
+  const [crewData, setCrewData] = useState([]);
   const [background, setBackground] = useState(
     require("../images/spider.webp")
   );
@@ -37,35 +40,31 @@ export default function Description() {
     return date.substr(0, 4);
   };
   useEffect(() => {
+    setLoading(true);
     tmdb
       .get(`/movie/${movie_id}`)
       .then((res) => {
         setDescription(res.data);
       })
       .catch((error) => console.log(error));
-  }, []);
-  console.log(description);
-  useEffect(() => {
     tmdb
       .get(`/movie/${movie_id}/credits`)
       .then((res) => {
         setCastData(res.data.cast);
+        setCrewData(res.data.crew);
       })
       .catch((error) => console.log(error));
-  }, []);
-  useEffect(() => {
     tmdb
       .get(`/movie/${movie_id}/images`)
       .then((res) => {
         setImages(res.data.backdrops);
       })
       .catch((error) => console.log(error));
+
+    setLoading(false);
   }, []);
-  // const [genres, setGenres] = useState([]);
-  // useEffect(()=>{
-  //   setGenres(description.genres)
-  // },[]);
-  // console.log(genres);
+  console.log(crewData);
+
   const {
     title,
     release_date,
@@ -79,7 +78,6 @@ export default function Description() {
     runtime,
     genres,
   } = description;
-  console.log(genres);
   const img = `https://image.tmdb.org/t/p/original${poster_path}`;
   const backgroundImg = `https://image.tmdb.org/t/p/original${backdrop_path}`;
   const myStyle = {
@@ -87,112 +85,124 @@ export default function Description() {
   };
   return (
     <div>
-      <div className="bg-top bg-cover bg-no-repeat" style={myStyle}>
-        <div className="py-12 flex flex-col space-y-8 bg-gray-900 bg-opacity-75 backdrop-blur-none lg:flex-row">
-          <div className="group w-72 h-[27rem] mx-auto ">
-            <div className="object-contain relative">
-              <img src={img} alt="" className="rounded-lg " />
-              <div
-                className="group-hover:opacity-100 opacity-0 absolute  flex flex-row  items-center top-0 justify-center w-72 h-[27rem] space-x-1 bg-gray-900 bg-opacity-20 backdrop-blur-md  drop-shadow-lg rounded-lg transition-all duration-300 ease-in-out"
-                onClick={() => setModal(true)}
-              >
-                <BiExpand className="text-3xl text-white"></BiExpand>
-                <p className="text-2xl text-gray-200 ">Expand</p>
+      {loading ? (
+        <div className="w-full h-[calc(100vh-20rem)] flex flex-col justify-center items-center">
+          <BeatLoader
+            color="#277BD2"
+            size={20}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+            className=" mx-auto  absolute "
+          />
+        </div>
+      ) : (
+        <div className="bg-top bg-cover bg-no-repeat" style={myStyle}>
+          <div className="py-12 flex flex-col space-y-8 bg-gray-900 bg-opacity-75 backdrop-blur-none lg:flex-row">
+            <div className="group w-72 h-[27rem] mx-auto ">
+              <div className="object-contain relative">
+                <img src={img} alt="" className="rounded-lg " />
+                <div
+                  className="group-hover:opacity-100 opacity-0 absolute  flex flex-row  items-center top-0 justify-center w-72 h-[27rem] space-x-1 bg-gray-900 bg-opacity-20 backdrop-blur-md  drop-shadow-lg rounded-lg transition-all duration-300 ease-in-out"
+                  onClick={() => setModal(true)}
+                >
+                  <BiExpand className="text-3xl text-white"></BiExpand>
+                  <p className="text-2xl text-gray-200 ">Expand</p>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="flex flex-col items-center px-10 md:px-28 space-y-5 text-white lg:w-[68%] lg:px-0 lg:pr-20  lg:items-start">
-            <div className="">
-              <h2 className="font-black text-2xl">
-                {title}&nbsp;({yearExtractor(release_date)})
-              </h2>
-            </div>
-            <div className="inline-flex items-center">
-              <p className="border-[2px] border-white p-[1px] px-1">PG</p>
-              &nbsp;
-              <p>{dateFormatter(release_date)} (US)</p>
-              &nbsp;
-              <p className="w-[6px] h-[6px] bg-white rounded-full "></p>
-              &nbsp;
-              {/* Genres */}
-              <div className="inline-flex first:text-blue-900">
-                {genres &&
-                  genres.map((item) => {
-                    return <p>{item.name},&nbsp;</p>;
+            <div className="flex flex-col items-center px-10 md:px-28 space-y-5 text-white lg:w-[68%] lg:px-0 lg:pr-20  lg:items-start">
+              <div className="">
+                <h2 className="font-black text-2xl">
+                  {title}&nbsp;({yearExtractor(release_date)})
+                </h2>
+              </div>
+              <div className="inline-flex items-center">
+                <p className="border-[2px] border-white p-[1px] px-1">PG</p>
+                &nbsp;
+                <p>{dateFormatter(release_date)} (US)</p>
+                &nbsp;
+                <p className="w-[6px] h-[6px] bg-white rounded-full "></p>
+                &nbsp;
+                {/* Genres */}
+                <div className="inline-flex first:text-blue-900">
+                  {genres &&
+                    genres.map((item) => {
+                      return <p>{item.name},&nbsp;</p>;
+                    })}
+                </div>
+                &nbsp;
+                <p className="w-[6px] h-[6px] bg-white rounded-full "></p>
+                &nbsp;
+                <p className="">{runTime(runtime)}</p>
+              </div>
+              <div className="inline-flex items-center space-x-4 relative">
+                <RatingCircle inlineStyle="top-0 left-0"></RatingCircle>
+                <div className="">
+                  <div className="peer w-12 h-12  bg-[#043056] rounded-full flex items-center justify-center">
+                    <FaListUl className=" text-white "></FaListUl>
+                  </div>
+                  <div className="hidden peer-hover:flex flex-col transition-all duration-1000 ease-in-out">
+                    <div className="bg-[#043056] w-3 h-3 absolute left-[5.7rem] top-[58px] rounded-sm rotate-45"></div>
+                    <p className=" absolute bg-[#043056] text-white font-semibold px-2 py-1 rounded-md left-14 top-16 ">
+                      Add to list
+                    </p>
+                  </div>
+                </div>
+                <div className="">
+                  <div className="peer w-12 h-12  bg-[#043056] rounded-full flex items-center justify-center">
+                    <FaHeart className=" text-white "></FaHeart>
+                  </div>
+                  <div className="hidden peer-hover:flex flex-col transition-all duration-1000 ease-in-out">
+                    <div className="bg-[#043056] w-3 h-3 absolute left-[9.6rem] top-[58px] rounded-sm rotate-45"></div>
+                    <p className=" absolute bg-[#043056] text-white font-semibold px-2 py-1 rounded-md left-24 top-16 ">
+                      Mark as Favorite
+                    </p>
+                  </div>
+                </div>
+                <div className="">
+                  <div className="peer w-12 h-12  bg-[#043056] rounded-full flex items-center justify-center">
+                    <AiFillStar className=" text-white "></AiFillStar>
+                  </div>
+                  <div className="hidden peer-hover:flex flex-col transition-all duration-1000 ease-in-out">
+                    <div className="bg-[#043056] w-3 h-3 absolute left-[13.7em] top-[58px] rounded-sm rotate-45"></div>
+                    <p className=" absolute bg-[#043056] text-white font-semibold px-2 py-1 rounded-md left-[12.5rem] top-16 ">
+                      Rate!
+                    </p>
+                  </div>
+                </div>
+                <a className="inline-flex items-center hover:opacity-70 transition-all duration-300 cursor-pointer">
+                  <BsPlayFill className="text-2xl"></BsPlayFill>
+                  <p className="font-bold ">Trailer</p>
+                </a>
+              </div>
+              <div>
+                <p className="italic text-lg text-justify text-gray-200">
+                  {tagline}
+                </p>
+              </div>
+              <div>
+                <p className="text-xl font-bold ">Overview</p>
+                <p className="text-justify">{description.overview}</p>
+              </div>
+              {/* producers, directors etc.. */}
+              <div className="grid grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-4	">
+                {crewData
+                  .filter((item) => 
+                    item.job == "Director"|| item.job == "Producer" || item.job == "Screenplay" || item.job == "Characters"  
+                  )
+                  .map((item) => {
+                    return (
+                      <div>
+                        <p className="font-bold">{item.name} </p>
+                        <p>{item.job}</p>
+                      </div>
+                    );
                   })}
-              </div>
-              &nbsp;
-              <p className="w-[6px] h-[6px] bg-white rounded-full "></p>
-              &nbsp;
-              <p className="">{runTime(runtime)}</p>
-            </div>
-            <div className="inline-flex items-center space-x-4 relative">
-              <RatingCircle inlineStyle="top-0 left-0"></RatingCircle>
-              <div className="">
-                <div className="peer w-12 h-12  bg-[#043056] rounded-full flex items-center justify-center">
-                  <FaListUl className=" text-white "></FaListUl>
-                </div>
-                <div className="hidden peer-hover:flex flex-col transition-all duration-1000 ease-in-out">
-                  <div className="bg-[#043056] w-3 h-3 absolute left-[5.7rem] top-[58px] rounded-sm rotate-45"></div>
-                  <p className=" absolute bg-[#043056] text-white font-semibold px-2 py-1 rounded-md left-14 top-16 ">
-                    Add to list
-                  </p>
-                </div>
-              </div>
-              <div className="">
-                <div className="peer w-12 h-12  bg-[#043056] rounded-full flex items-center justify-center">
-                  <FaHeart className=" text-white "></FaHeart>
-                </div>
-                <div className="hidden peer-hover:flex flex-col transition-all duration-1000 ease-in-out">
-                  <div className="bg-[#043056] w-3 h-3 absolute left-[9.6rem] top-[58px] rounded-sm rotate-45"></div>
-                  <p className=" absolute bg-[#043056] text-white font-semibold px-2 py-1 rounded-md left-24 top-16 ">
-                    Mark as Favorite
-                  </p>
-                </div>
-              </div>
-              <div className="">
-                <div className="peer w-12 h-12  bg-[#043056] rounded-full flex items-center justify-center">
-                  <AiFillStar className=" text-white "></AiFillStar>
-                </div>
-                <div className="hidden peer-hover:flex flex-col transition-all duration-1000 ease-in-out">
-                  <div className="bg-[#043056] w-3 h-3 absolute left-[13.7em] top-[58px] rounded-sm rotate-45"></div>
-                  <p className=" absolute bg-[#043056] text-white font-semibold px-2 py-1 rounded-md left-[12.5rem] top-16 ">
-                    Rate!
-                  </p>
-                </div>
-              </div>
-              <a className="inline-flex items-center hover:opacity-70 transition-all duration-300 cursor-pointer">
-                <BsPlayFill className="text-2xl"></BsPlayFill>
-                <p className="font-bold ">Trailer</p>
-              </a>
-            </div>
-            <div>
-              <p className="italic text-lg text-justify text-gray-200">
-                {tagline}
-              </p>
-            </div>
-            <div>
-              <p className="text-xl font-bold ">Overview</p>
-              <p className="text-justify">{description.overview}</p>
-            </div>
-            {/* producers, directors etc.. */}
-            <div className="grid grid-cols-3 gap-x-6 gap-y-4	">
-              <div>
-                <p className="font-bold">Christopher Nolan </p>
-                <p>Director</p>
-              </div>
-              <div>
-                <p className="font-bold">Elon Musk</p>
-                <p>Producer</p>
-              </div>
-              <div>
-                <p className="font-bold">Stan Lee</p>
-                <p>Comics</p>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* casting list */}
       <div className="py-6 dark:bg-gray-800 dark:text-gray-300">
@@ -220,12 +230,12 @@ export default function Description() {
               </div>
             </div>
             <div className="py-5 pl-8 ">
-              <a
-                href="#"
+              <Link
+                to="/crew"
                 className="font-bold text-lg hover:text-gray-500 transition-all duration-200 text-[#003968] dark:text-blue-500"
               >
                 Full Cast & Crew
-              </a>
+              </Link>
             </div>
           </div>
           <div className="lg:w-1/4">
@@ -255,11 +265,11 @@ export default function Description() {
                 </div>
                 <div className="flex flex-col ">
                   <p className="font-bold">Budget</p>
-                  <p>${budget}</p>
+                  <p>${moneyFormatter(budget)}</p>
                 </div>
                 <div className="flex flex-col ">
                   <p className="font-bold">Revenue</p>
-                  <p>${revenue}</p>
+                  <p>${moneyFormatter(revenue)}</p>
                 </div>
               </div>
             </div>

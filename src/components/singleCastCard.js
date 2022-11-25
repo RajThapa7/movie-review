@@ -1,9 +1,16 @@
 import React from 'react'
-// import img from '../images/perry.jpg'
-export default function SingleCastCard({name, character, img}) {
+import defaultImg from '../images/default.jpg'
+
+export default function SingleCastCard({name, character, img }) {
+  const replaceImage = (error) => {
+    //replacement of broken Image
+    error.target.src = defaultImg; 
+}
   return (
     <div className='flex flex-col rounded-lg shadow-md shadow-gray-400  min-w-[10rem] w-40 h-[17.5rem] dark:shadow-gray-900 dark:border-gray-800'>
-        <img src={img} alt="Profile Image" className='rounded-t-lg object-cover w-40 h-44' />
+        <img src={img} alt="Profile Image" className='rounded-t-lg object-cover w-40 h-44'  onError={(e) => {
+    e.target.src = defaultImg 
+ }}/>
         <div className='flex flex-col px-3 py-2'>
 
         <p className='font-black dark:text-gray-300'>{name}</p>

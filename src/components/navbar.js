@@ -16,20 +16,17 @@ export default function Navbar() {
   const [dark, setDark] = useState(false);
   const [number, setNumber] = useState(false);
   const navigate = useNavigate();
-  const theme = localStorage.getItem('theme');
+  const theme = localStorage.getItem("theme");
 
-  useEffect(()=>{
-
-    if(theme == "dark"){
-      document.documentElement.classList.add('dark')
-  
+  useEffect(() => {
+    if (theme == "dark") {
+      setDark(true);
+      document.documentElement.classList.add("dark");
+    } else {
+      setDark(false);
+      document.documentElement.classList.remove("dark");
     }
-    else{
-      document.documentElement.classList.remove('dark')
-
-    }
-  },[theme]);
-  console.log(theme)
+  }, [theme]);
 
   const handleClick = (e) => {
     if (menuOpen) {
@@ -94,14 +91,15 @@ export default function Navbar() {
               </div>
             );
           })}
-          <button className="pl-1 flex flex-col items-start justify-start" id="toggler" >
-            {theme == "dark" ? (
-
+          <button
+            className="pl-1 flex flex-col items-start justify-start"
+            id="toggler"
+          >
+            {dark ? (
               <FaMoon
                 className=" text-xl font-normal uppercase"
                 onClick={() => {
                   localStorage.setItem("theme", "");
-                  // document.documentElement.classList.remove('dark')
                   setDark(false);
                 }}
               />
@@ -112,7 +110,6 @@ export default function Navbar() {
                   localStorage.setItem("theme", "dark");
                   // document.documentElement.classList.add('dark')
                   setDark(true);
-                  
                 }}
               />
             )}
@@ -205,12 +202,18 @@ export default function Navbar() {
           {dark ? (
             <FaMoon
               className=" text-xl font-normal uppercase"
-              onClick={() => setDark(false)}
+              onClick={() => {
+                localStorage.setItem("theme", "");
+                setDark(false);
+              }}
             />
           ) : (
             <BsSunFill
               className=" text-xl font-normal uppercase"
-              onClick={() => setDark(true)}
+              onClick={() => {
+                localStorage.setItem("theme", "dark");
+                setDark(true);
+              }}
             />
           )}
         </button>

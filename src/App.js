@@ -16,7 +16,9 @@ import TvList from './components/tvList';
 import SearchResults from './components/searchResults';
 import { createContext } from 'react';
 import { useState } from 'react';
+import FullCrew from './components/fullCrew';
 export const SearchContext = createContext();
+
 function App() {
   const [searchQuery, setSearchQuery] = useState();
   return (
@@ -24,6 +26,7 @@ function App() {
 <Navbar></Navbar>
 
 <Routes>
+<Route exact path='/crew' element={<FullCrew/>}></Route>
 <Route exact path='/search-results' element={<SearchResults/>}></Route>
 <Route exact path='/tv' element={<TvList/>}></Route>
   <Route exact path='/movies' element={<MovieList/>}></Route>

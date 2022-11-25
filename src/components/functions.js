@@ -19,3 +19,6 @@ export const runTime = (runtime)=>{
   return `${hour}h ${minute}m`
 }
 
+export const moneyFormatter = (amount)=>{
+  return Number(amount).toLocaleString();
+}

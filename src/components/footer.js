@@ -30,7 +30,7 @@ export default function Footer() {
         <div className='flex flex-col space-y-4 mt-4 md:w-1/3 text-white font-semibold' >
             <p className='inline-flex'><MdLocationPin className='bg-cyan-600 text-white rounded-full w-7 h-7 p-1 mr-3'/> Kapan, Budhanilkantha-12, Kathmandu, Nepal</p>
             <p className='inline-flex'><BsTelephoneFill className='bg-cyan-600 text-white rounded-full w-7 h-7 p-1 mr-3'/> 9848741130</p>
-            <p className='inline-flex'><GrMail className='bg-cyan-600 text-white rounded-full w-7 h-7 p-1 mr-3'/>dharabattinepal@gmail.com</p>
+            <p className='inline-flex'><GrMail className='bg-cyan-600 text-white rounded-full w-7 h-7 p-1 mr-3'/>tgmr@gmail.com</p>
         </div>
         <div className='md:w-1/3 md:flex md:flex-col text-white font-semibold' >
     <p className='text-lg mt-4 mb-4 md:mt-0 md:self-center font-bold'>Links</p>
@@ -56,7 +56,7 @@ export default function Footer() {
 
         <div className='w-full border-[1px] border-white rounded-full bg-white mt-8'>
         </div>
-        <div className='text-center mt-4 text-white font-bold' > My Furry Friend © 2022 - All Rights Reserved</div>
+        <div className='text-center mt-4 text-white font-bold' > The Great Movie Review © 2022 - All Rights Reserved</div>
 
     </div>
   )

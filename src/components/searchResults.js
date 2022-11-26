@@ -19,6 +19,7 @@ export default function SearchResults() {
           setLoading(false)
         }).catch((error) => console.log(error));
       },[searchQuery]);
+      console.log(data)
   return (
     <div className="dark:bg-gray-800 dark:text-gray-200">
     <h2 className="text-2xl font-semibold px-10 md:px-20 pt-8">
@@ -38,7 +39,11 @@ export default function SearchResults() {
           
     <div className="md:px-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5  justify-items-center">
       {data.map((item) => {
-        const { title, release_date, poster_path, id } = item;
+        let title, release_date;
+        const {  poster_path, id , media_type, vote_average} = item;
+        media_type == 'movie'? title = item.title: title = item.name;
+        media_type == 'movie'? release_date = item.release_date: release_date = item.first_air_date;
+
         const img = `https://image.tmdb.org/t/p/original${poster_path}`;
         return (
           <SingleCard
@@ -47,6 +52,8 @@ export default function SearchResults() {
             releaseDate={release_date}
             img={img}
             movie_id={id}
+            media_type={media_type}
+            rating={vote_average}
           />
         );
       })}

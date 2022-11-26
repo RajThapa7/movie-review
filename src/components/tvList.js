@@ -22,8 +22,7 @@ export default function TvList() {
   }, [filter]);
   const [movieListTitle, setMovieListTitle] = useState();
   const [movieList, setMovieList] = useState([]);
-  console.log(filter);
-
+console.log(movieList);
   return (
     <div className="py-10 dark:bg-gray-800 dark:text-gray-300">
       <form
@@ -105,15 +104,16 @@ export default function TvList() {
           
           <div className="md:px-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5  justify-items-center">
             {movieList.map((item) => {
-              const { title, release_date, poster_path, id } = item;
+              const { name, first_air_date, poster_path, id } = item;
               const img = `https://image.tmdb.org/t/p/original${poster_path}`;
               return (
                 <SingleCard
                   key={id}
-                  title={title}
-                  releaseDate={release_date}
+                  title={name}
+                  releaseDate={first_air_date}
                   img={img}
                   movie_id={id}
+                  media_type='tv'
                 />
               );
             })}

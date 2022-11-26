@@ -18,7 +18,12 @@ import axios from "axios";
 import tmdb from "../api/tmdb";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { dateFormatter, moneyFormatter, runTime, yearExtractor } from "./functions";
+import {
+  dateFormatter,
+  moneyFormatter,
+  runTime,
+  yearExtractor,
+} from "./functions";
 import { BeatLoader } from "react-spinners";
 export default function Description() {
   const [loading, setLoading] = useState(false);
@@ -33,27 +38,29 @@ export default function Description() {
   const [images, setImages] = useState([]);
   const [modalImageIndex, setModalImageIndex] = useState(0);
   const modalImage = [];
-  const movie_id = localStorage.getItem("movie_id");
+  const _id = localStorage.getItem("id");
+  const id = _id.split('_')[0];
+  const media_type = _id.split('_')[1];
   const yearExtract = (date) => {
     return date.substr(0, 4);
   };
   useEffect(() => {
     setLoading(true);
     tmdb
-      .get(`/movie/${movie_id}`)
+      .get(`/${media_type}/${id}`)
       .then((res) => {
         setDescription(res.data);
       })
       .catch((error) => console.log(error));
     tmdb
-      .get(`/movie/${movie_id}/credits`)
+      .get(`/${media_type}/${id}/credits`)
       .then((res) => {
         setCastData(res.data.cast);
         setCrewData(res.data.crew);
       })
       .catch((error) => console.log(error));
     tmdb
-      .get(`/movie/${movie_id}/images`)
+      .get(`/${media_type}/${id}/images`)
       .then((res) => {
         setImages(res.data.backdrops);
       })
@@ -61,11 +68,13 @@ export default function Description() {
 
     setLoading(false);
   }, []);
-  console.log(crewData);
+console.log(description);
+  let title, release_date;
+media_type == 'movie'? title = description.title:title = description.name;
+media_type == 'movie'? release_date = description.release_date:release_date = description.first_air_date;
 
   const {
-    title,
-    release_date,
+   
     status,
     budget,
     revenue,
@@ -75,6 +84,11 @@ export default function Description() {
     backdrop_path,
     runtime,
     genres,
+    number_of_seasons,
+    number_of_episodes,
+    type,
+    networks,
+    vote_average
   } = description;
   const img = `https://image.tmdb.org/t/p/original${poster_path}`;
   const backgroundImg = `https://image.tmdb.org/t/p/original${backdrop_path}`;
@@ -114,27 +128,40 @@ export default function Description() {
                   {title}&nbsp;({yearExtractor(release_date)})
                 </h2>
               </div>
-              <div className="inline-flex items-center">
-                <p className="border-[2px] border-white p-[1px] px-1">PG</p>
-                &nbsp;
-                <p>{dateFormatter(release_date)} (US)</p>
-                &nbsp;
-                <p className="w-[6px] h-[6px] bg-white rounded-full "></p>
-                &nbsp;
-                {/* Genres */}
-                <div className="inline-flex first:text-blue-900">
-                  {genres &&
-                    genres.map((item) => {
-                      return <p>{item.name},&nbsp;</p>;
-                    })}
+              <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0">
+                <div className="inline-flex items-center">
+                  <p className="border-[2px] border-white p-[1px] px-1">PG</p>
+                  &nbsp;
+                  <p>{dateFormatter(release_date)} (US)</p>
                 </div>
-                &nbsp;
+                <span className="hidden md:flex">&nbsp;</span>
+                <div className="inline-flex items-center">
+                  <p className="w-[6px] h-[6px] bg-white rounded-full "></p>
+                  &nbsp;
+                  {/* Genres */}
+                  <div className="inline-flex first:text-blue-900">
+                    {genres &&
+                      genres.map((item) => {
+                        return <p>{item.name},&nbsp;</p>;
+                      })}
+                  </div>
+                  &nbsp;
+                </div>
+                {media_type == 'movie'?<div className="inline-flex items-center">
+                  <p className="w-[6px] h-[6px] bg-white rounded-full "></p>
+                  &nbsp;
+                  <p className="">{runTime(runtime)}</p>
+                </div> :
+                <div className="inline-flex items-center">
                 <p className="w-[6px] h-[6px] bg-white rounded-full "></p>
                 &nbsp;
-                <p className="">{runTime(runtime)}</p>
+                <p className="">{number_of_seasons} seasons, {number_of_episodes} episodes</p>
+              </div>
+                }
+                
               </div>
               <div className="inline-flex items-center space-x-4 relative">
-                <RatingCircle inlineStyle="top-0 left-0"></RatingCircle>
+                <RatingCircle inlineStyle="top-0 left-0" rating={vote_average}></RatingCircle>
                 <div className="">
                   <div className="peer w-12 h-12  bg-[#043056] rounded-full flex items-center justify-center">
                     <FaListUl className=" text-white "></FaListUl>
@@ -185,8 +212,12 @@ export default function Description() {
               {/* producers, directors etc.. */}
               <div className="grid grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-4	">
                 {crewData
-                  .filter((item) => 
-                    item.job == "Director"|| item.job == "Producer" || item.job == "Screenplay" || item.job == "Characters"  
+                  .filter(
+                    (item) =>
+                      item.job == "Director" ||
+                      item.job == "Producer" ||
+                      item.job == "Screenplay" ||
+                      item.job == "Characters"
                   )
                   .map((item) => {
                     return (
@@ -261,7 +292,9 @@ export default function Description() {
                   <p className="font-bold">Original Language</p>
                   <p>{original_language}</p>
                 </div>
-                <div className="flex flex-col ">
+                {media_type == 'movie'?
+                 <>
+                  <div className="flex flex-col ">
                   <p className="font-bold">Budget</p>
                   <p>${moneyFormatter(budget)}</p>
                 </div>
@@ -269,6 +302,23 @@ export default function Description() {
                   <p className="font-bold">Revenue</p>
                   <p>${moneyFormatter(revenue)}</p>
                 </div>
+                 </>
+                :
+               <>
+                <div className="flex flex-col ">
+                  <p className="font-bold">Type</p>
+                  <p>{type}</p>
+                </div>
+                <div className="flex flex-col ">
+                  <p className="font-bold">Networks</p>
+                  {networks &&
+                      networks.map((item) => {
+                        return <p>{item.name}&nbsp;</p>;
+                      })}
+                </div>
+               </>
+                }
+              
               </div>
             </div>
           </div>

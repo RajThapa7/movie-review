@@ -115,6 +115,7 @@ export default function MovieList() {
                 releaseDate={release_date}
                 img={img}
                 movie_id={id}
+                media_type='movie'
               />
             );
           })}

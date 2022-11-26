@@ -5,7 +5,7 @@ import RatingCircle from "./ratingCircle";
 import { dateModifier } from "./dateModifier";
 import { Link } from "react-router-dom";
 
-export default function SingleCard({ title, releaseDate, img, movie_id }) {
+export default function SingleCard({ title, releaseDate, img, movie_id, media_type, rating }) {
   const date = { releaseDate }.releaseDate;
   const [visible, setVisible] = useState(false);
   const handleMouseEnter = () => {
@@ -14,7 +14,6 @@ export default function SingleCard({ title, releaseDate, img, movie_id }) {
   const handleMouseLeave = () => {
     setVisible(false);
   };
-
   return (
     <>
       <div className="flex flex-col  w-[12.25rem] relative my-12 border-2 border-solid shadow-lg shadow-gray-300  rounded-xl dark:shadow-gray-900 dark:border-gray-800 ">
@@ -47,14 +46,15 @@ export default function SingleCard({ title, releaseDate, img, movie_id }) {
             ></BsPlusLg>
           </div>
         </div>
-        <RatingCircle inlineStyle="-top-7"></RatingCircle>
+        <RatingCircle inlineStyle="-top-7" rating={rating}></RatingCircle>
 
         <div className="w-44 mx-auto -mt-3          ">
           <Link
             to="/description"
             className="font-bold text-md hover:text-cyan-600 transition-all duration-150 ease-in-out"
             onClick={() => {
-              localStorage.setItem("movie_id", movie_id);
+              localStorage.setItem("id", `${movie_id}_${media_type}`)
+              ;
             }}
           >
             {title}

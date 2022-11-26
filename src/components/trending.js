@@ -18,11 +18,12 @@ export default function Trending() {
     tmdb
       .get(`/trending/all/${time}`)
       .then((res) => {
-        setLoading(false);
         setTrending(res.data.results);
+        setLoading(false);
       })
       .catch((error) => console.log(error));
   }, [time]);
+  console.log(trending)
   return (
     <div className="dark:bg-gray-800 dark:text-gray-300">
       <div className="flex flex-row items-end pl-12">
@@ -38,7 +39,12 @@ export default function Trending() {
             className=" mx-auto py-24"
 
           />:trending.map((item) => {
-          const { title, release_date, poster_path, id } = item;
+            let title;
+            let release_date;
+            const {   poster_path, id, media_type, vote_average } = item;
+         media_type == 'movie' ? title = item.title: title = item.name;
+          media_type == 'movie' ? release_date = item.release_date:  release_date= item.first_air_date;
+
           const img = `https://image.tmdb.org/t/p/original${poster_path}`;
           return (
             <SingleCard
@@ -47,6 +53,8 @@ export default function Trending() {
               releaseDate={release_date}
               img={img}
               movie_id={id}
+              media_type={media_type}
+              rating={vote_average}
             />
           );
         })}

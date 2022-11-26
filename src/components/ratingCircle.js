@@ -1,13 +1,26 @@
 import React from "react";
-
-export default function RatingCircle({inlineStyle}) {
+import { useEffect } from "react";
+import { useState } from "react";
+export default function RatingCircle({ inlineStyle, rating }) {
+  const [color, setColor] = useState();
+  const dashOffset = (10 - rating) * 13.5;
+  useEffect(() => {
+    if (dashOffset >= 0 && dashOffset <= 40.5) {
+      setColor("stroke-[#46b987]");
+    } else if (dashOffset >= 40.51 && dashOffset <= 94.5) {
+      setColor("stroke-[#daeb49]");
+    } else {
+      setColor("stroke-red-400");
+    }
+  }, []);
   return (
     <>
       <div className={`w-14 h-14 relative  left-3  ${inlineStyle}`}>
         <div className="w-14 h-14   rounded-full px-[6px] py-[6px] bg-[#081C22]">
           <div className="w-10 h-10 rounded-full flex flex-col items-center justify-center  font-black bg-[#081C22] text-white ">
             <p className="text-center mt-1 ml-2">
-              91<sup>%</sup>
+              {Math.floor(rating * 10)}
+              <sup>%</sup>
             </p>
           </div>
         </div>
@@ -23,8 +36,11 @@ export default function RatingCircle({inlineStyle}) {
             cy="28"
             r="22"
             strokeLinecap="round"
-            className="fill-transparent stroke-[#46b987] stroke-[5px] bg-red-100 "
-            style={{ strokeDasharray: "190", strokeDashoffset: "0" }}
+            className={`fill-transparent ${color} stroke-[5px] bg-red-100 `}
+            style={{
+              strokeDasharray: "135",
+              strokeDashoffset: `${dashOffset} `,
+            }}
           />
         </svg>
       </div>

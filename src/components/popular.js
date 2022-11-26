@@ -21,6 +21,7 @@ export default function Popular() {
       })
       .catch((error) => console.log(error));
   }, [media]);
+  console.log(popular);
   return (
     <div className="dark:bg-gray-800 dark:text-gray-300">
       <div className="flex flex-row items-end pl-12 ">
@@ -42,12 +43,17 @@ export default function Popular() {
             aria-label="Loading Spinner"
             data-testid="loader"
             className=" mx-auto py-24"
-
           />
         ) : (
           popular.map((item) => {
-            const { title, release_date, poster_path, id } = item;
+            const { poster_path, id, vote_average } = item;
+            let title;
+            let release_date;
+            media == "tv" ? (title = item.name) : (title = item.title);
+            media == "tv" ? (release_date = item.first_air_date) : (release_date = item.release_date);
+
             const img = `https://image.tmdb.org/t/p/original${poster_path}`;
+
             return (
               <SingleCard
                 key={id}
@@ -55,6 +61,8 @@ export default function Popular() {
                 releaseDate={release_date}
                 img={img}
                 movie_id={id}
+                media_type={media}
+                rating={vote_average}
               />
             );
           })

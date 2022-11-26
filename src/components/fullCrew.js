@@ -12,12 +12,13 @@ export default function FullCrew() {
   const [crewData, setCrewData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const movie_id = localStorage.getItem("movie_id");
-  
+  const _id = localStorage.getItem("id");
+  const id = _id.split('_')[0];
+  const media_type = _id.split('_')[1];  
   useEffect(() => {
     setLoading(true)
     tmdb
-      .get(`/movie/${movie_id}/credits`)
+      .get(`/${media_type }/${id}/credits`)
       .then((res) => {
         setCastData(res.data.cast);
         setCrewData(res.data.crew);

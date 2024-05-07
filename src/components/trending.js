@@ -6,20 +6,20 @@ import SliderButton from "./sliderButton";
 
 export default function Trending() {
   const [trending, setTrending] = useState([]);
-  const [media, setMedia] = useState("tv");
-  const [time, setTime] = useState("day");
   const [loading, setLoading] = useState(false);
+  const options = ["day", "week"];
+  const [value, setValue] = useState(options[0]);
 
   useEffect(() => {
     setLoading(true);
     tmdb
-      .get(`/trending/all/${time}`)
+      .get(`/trending/all/${value}`)
       .then((res) => {
         setTrending(res.data.results);
         setLoading(false);
       })
       .catch((error) => console.log(error));
-  }, [time]);
+  }, [value]);
 
   return (
     <div className="dark:bg-gray-800 dark:text-gray-300">
@@ -28,8 +28,7 @@ export default function Trending() {
         <SliderButton
           title1="Today"
           title2="This Week"
-          setTime={setTime}
-          setMedia={setMedia}
+          {...{ options, setValue }}
         ></SliderButton>
       </div>
       <div className="flex flex-row overflow-x-scroll space-x-8 pl-12">

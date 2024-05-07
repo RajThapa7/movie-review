@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-export default function SliderButton({ title1, title2, setTime, setMedia }) {
+export default function SliderButton({ title1, title2, options, setValue }) {
   const [active, setActive] = useState(true);
   return (
     <>
@@ -12,8 +12,7 @@ export default function SliderButton({ title1, title2, setTime, setMedia }) {
           } px-4 w-fit py-2 text-center font-black cursor-pointer `}
           onClick={() => {
             setActive(true);
-            setTime("day");
-            setMedia("tv");
+            setValue(options[0]);
           }}
         >
           {title1}
@@ -26,8 +25,7 @@ export default function SliderButton({ title1, title2, setTime, setMedia }) {
           } px-4 w-fit text-center py-2 font-black  cursor-pointer `}
           onClick={() => {
             setActive(false);
-            setTime("week");
-            setMedia("movie");
+            setValue(options[1]);
           }}
         >
           {title2}

@@ -5,21 +5,21 @@ import SingleCard from "./singleCard";
 import SliderButton from "./sliderButton";
 
 export default function Popular() {
-  const [media, setMedia] = useState("tv");
   const [popular, setPopular] = useState([]);
-  const [time, setTime] = useState("day");
   const [loading, setLoading] = useState(false);
+  const options = ["tv", "movie"];
+  const [value, setValue] = useState(options[0]);
 
   useEffect(() => {
     setLoading(true);
     tmdb
-      .get(`${media}/popular`)
+      .get(`${value}/popular`)
       .then((res) => {
         setPopular(res.data.results);
         setLoading(false);
       })
       .catch((error) => console.log(error));
-  }, [media]);
+  }, [value]);
 
   return (
     <div className="dark:bg-gray-800 dark:text-gray-300">
@@ -30,8 +30,7 @@ export default function Popular() {
         <SliderButton
           title1="On TV"
           title2="In Theatres"
-          setMedia={setMedia}
-          setTime={setTime}
+          {...{ options, setValue }}
         ></SliderButton>
       </div>
       <div className="flex flex-row overflow-x-scroll space-x-8 pl-12 ">
@@ -48,8 +47,8 @@ export default function Popular() {
             const { poster_path, id, vote_average } = item;
             let title;
             let release_date;
-            media === "tv" ? (title = item.name) : (title = item.title);
-            media === "tv"
+            value === "tv" ? (title = item.name) : (title = item.title);
+            value === "tv"
               ? (release_date = item.first_air_date)
               : (release_date = item.release_date);
 
@@ -62,7 +61,7 @@ export default function Popular() {
                 releaseDate={release_date}
                 img={img}
                 movie_id={id}
-                media_type={media}
+                media_type={value}
                 rating={vote_average}
               />
             );

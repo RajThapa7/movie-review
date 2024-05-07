@@ -48,8 +48,8 @@ export default function Popular() {
             const { poster_path, id, vote_average } = item;
             let title;
             let release_date;
-            media == "tv" ? (title = item.name) : (title = item.title);
-            media == "tv"
+            media === "tv" ? (title = item.name) : (title = item.title);
+            media === "tv"
               ? (release_date = item.first_air_date)
               : (release_date = item.release_date);
 

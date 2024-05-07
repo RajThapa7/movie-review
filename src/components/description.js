@@ -1,30 +1,25 @@
-import React, { useState } from "react";
-import RatingCircle from "./ratingCircle";
-import { BsArrowRight, BsPlusLg, BsThreeDots, BsTwitter } from "react-icons/bs";
+import React, { useEffect, useState } from "react";
+import { AiFillInstagram, AiFillStar, AiOutlineClose } from "react-icons/ai";
+import { BiExpand } from "react-icons/bi";
+import { BsFacebook, BsPlayFill, BsTwitter } from "react-icons/bs";
 import {
   FaHeart,
   FaListUl,
-  FaLongArrowAltRight,
   FaLongArrowAltLeft,
-  FaGenderless,
+  FaLongArrowAltRight,
 } from "react-icons/fa";
-import { AiFillStar, AiOutlineClose } from "react-icons/ai";
-import { BsPlayFill } from "react-icons/bs";
-import { BiExpand } from "react-icons/bi";
-import SingleCastCard from "./singleCastCard";
-import { AiFillInstagram } from "react-icons/ai";
-import { BsFacebook } from "react-icons/bs";
-import axios from "axios";
-import tmdb from "../api/tmdb";
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { BeatLoader } from "react-spinners";
+import tmdb from "../api/tmdb";
 import {
   dateFormatter,
   moneyFormatter,
   runTime,
   yearExtractor,
 } from "./functions";
-import { BeatLoader } from "react-spinners";
+import RatingCircle from "./ratingCircle";
+import SingleCastCard from "./singleCastCard";
+
 export default function Description() {
   const [loading, setLoading] = useState(false);
   const shadowStyle = {};
@@ -32,18 +27,13 @@ export default function Description() {
   const [description, setDescription] = useState({});
   const [castData, setCastData] = useState([]);
   const [crewData, setCrewData] = useState([]);
-  const [background, setBackground] = useState(
-    require("../images/spider.webp")
-  );
   const [images, setImages] = useState([]);
   const [modalImageIndex, setModalImageIndex] = useState(0);
   const modalImage = [];
   const _id = localStorage.getItem("id");
-  const id = _id.split('_')[0];
-  const media_type = _id.split('_')[1];
-  const yearExtract = (date) => {
-    return date.substr(0, 4);
-  };
+  const id = _id.split("_")[0];
+  const media_type = _id.split("_")[1];
+
   useEffect(() => {
     setLoading(true);
     tmdb
@@ -67,14 +57,17 @@ export default function Description() {
       .catch((error) => console.log(error));
 
     setLoading(false);
-  }, []);
-console.log(description);
+  }, [id, media_type]);
+
   let title, release_date;
-media_type == 'movie'? title = description.title:title = description.name;
-media_type == 'movie'? release_date = description.release_date:release_date = description.first_air_date;
+  media_type === "movie"
+    ? (title = description.title)
+    : (title = description.name);
+  media_type === "movie"
+    ? (release_date = description.release_date)
+    : (release_date = description.first_air_date);
 
   const {
-   
     status,
     budget,
     revenue,
@@ -88,7 +81,7 @@ media_type == 'movie'? release_date = description.release_date:release_date = de
     number_of_episodes,
     type,
     networks,
-    vote_average
+    vote_average,
   } = description;
   const img = `https://image.tmdb.org/t/p/original${poster_path}`;
   const backgroundImg = `https://image.tmdb.org/t/p/original${backdrop_path}`;
@@ -147,21 +140,27 @@ media_type == 'movie'? release_date = description.release_date:release_date = de
                   </div>
                   &nbsp;
                 </div>
-                {media_type == 'movie'?<div className="inline-flex items-center">
-                  <p className="w-[6px] h-[6px] bg-white rounded-full "></p>
-                  &nbsp;
-                  <p className="">{runTime(runtime)}</p>
-                </div> :
-                <div className="inline-flex items-center">
-                <p className="w-[6px] h-[6px] bg-white rounded-full "></p>
-                &nbsp;
-                <p className="">{number_of_seasons} seasons, {number_of_episodes} episodes</p>
-              </div>
-                }
-                
+                {media_type === "movie" ? (
+                  <div className="inline-flex items-center">
+                    <p className="w-[6px] h-[6px] bg-white rounded-full "></p>
+                    &nbsp;
+                    <p className="">{runTime(runtime)}</p>
+                  </div>
+                ) : (
+                  <div className="inline-flex items-center">
+                    <p className="w-[6px] h-[6px] bg-white rounded-full "></p>
+                    &nbsp;
+                    <p className="">
+                      {number_of_seasons} seasons, {number_of_episodes} episodes
+                    </p>
+                  </div>
+                )}
               </div>
               <div className="inline-flex items-center space-x-4 relative">
-                <RatingCircle inlineStyle="top-0 left-0" rating={vote_average}></RatingCircle>
+                <RatingCircle
+                  inlineStyle="top-0 left-0"
+                  rating={vote_average}
+                ></RatingCircle>
                 <div className="">
                   <div className="peer w-12 h-12  bg-[#043056] rounded-full flex items-center justify-center">
                     <FaListUl className=" text-white "></FaListUl>
@@ -195,10 +194,10 @@ media_type == 'movie'? release_date = description.release_date:release_date = de
                     </p>
                   </div>
                 </div>
-                <a className="inline-flex items-center hover:opacity-70 transition-all duration-300 cursor-pointer">
+                <div className="inline-flex items-center hover:opacity-70 transition-all duration-300 cursor-pointer">
                   <BsPlayFill className="text-2xl"></BsPlayFill>
                   <p className="font-bold ">Trailer</p>
-                </a>
+                </div>
               </div>
               <div>
                 <p className="italic text-lg text-justify text-gray-200">
@@ -214,10 +213,10 @@ media_type == 'movie'? release_date = description.release_date:release_date = de
                 {crewData
                   .filter(
                     (item) =>
-                      item.job == "Director" ||
-                      item.job == "Producer" ||
-                      item.job == "Screenplay" ||
-                      item.job == "Characters"
+                      item.job === "Director" ||
+                      item.job === "Producer" ||
+                      item.job === "Screenplay" ||
+                      item.job === "Characters"
                   )
                   .map((item) => {
                     return (
@@ -272,15 +271,9 @@ media_type == 'movie'? release_date = description.release_date:release_date = de
             <div className="space-y-5 pl-8 ">
               {/* social links */}
               <div className="inline-flex space-x-4 text-3xl">
-                <a href="#">
-                  <BsFacebook></BsFacebook>
-                </a>
-                <a href="#">
-                  <BsTwitter></BsTwitter>
-                </a>
-                <a href="#">
-                  <AiFillInstagram></AiFillInstagram>
-                </a>
+                <BsFacebook></BsFacebook>
+                <BsTwitter></BsTwitter>
+                <AiFillInstagram></AiFillInstagram>
               </div>
               {/* movie datas */}
               <div className="space-y-4">
@@ -292,33 +285,32 @@ media_type == 'movie'? release_date = description.release_date:release_date = de
                   <p className="font-bold">Original Language</p>
                   <p>{original_language}</p>
                 </div>
-                {media_type == 'movie'?
-                 <>
-                  <div className="flex flex-col ">
-                  <p className="font-bold">Budget</p>
-                  <p>${moneyFormatter(budget)}</p>
-                </div>
-                <div className="flex flex-col ">
-                  <p className="font-bold">Revenue</p>
-                  <p>${moneyFormatter(revenue)}</p>
-                </div>
-                 </>
-                :
-               <>
-                <div className="flex flex-col ">
-                  <p className="font-bold">Type</p>
-                  <p>{type}</p>
-                </div>
-                <div className="flex flex-col ">
-                  <p className="font-bold">Networks</p>
-                  {networks &&
-                      networks.map((item) => {
-                        return <p>{item.name}&nbsp;</p>;
-                      })}
-                </div>
-               </>
-                }
-              
+                {media_type === "movie" ? (
+                  <>
+                    <div className="flex flex-col ">
+                      <p className="font-bold">Budget</p>
+                      <p>${moneyFormatter(budget)}</p>
+                    </div>
+                    <div className="flex flex-col ">
+                      <p className="font-bold">Revenue</p>
+                      <p>${moneyFormatter(revenue)}</p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex flex-col ">
+                      <p className="font-bold">Type</p>
+                      <p>{type}</p>
+                    </div>
+                    <div className="flex flex-col ">
+                      <p className="font-bold">Networks</p>
+                      {networks &&
+                        networks.map((item) => {
+                          return <p>{item.name}&nbsp;</p>;
+                        })}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -330,7 +322,7 @@ media_type == 'movie'? release_date = description.release_date:release_date = de
         style={{ display: modal ? "flex" : "none" }}
         className="w-full h-screen bg-gray-900 bg-opacity-80 fixed top-0 left-0 flex-col items-center justify-center transition-all duration-300 ease-in-out "
       >
-        {images.map((item) => {
+        {images.forEach((item) => {
           const img = `https://image.tmdb.org/t/p/original${item.file_path}`;
           modalImage.push(img);
         })}

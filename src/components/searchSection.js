@@ -1,19 +1,12 @@
-import axios from "axios";
-import React from "react";
-import { useContext } from "react";
-import { useState } from "react";
-import { useEffect } from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import tmdb from "../api/tmdb";
 import { SearchContext } from "../App";
 
 export default function SearchSection() {
-  const {setSearchQuery} = useContext(SearchContext)
+  const { setSearchQuery } = useContext(SearchContext);
   // const [searchQuery, setSearchQuery] = useState();
-  const [data, setData] = useState([])
-const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  
   return (
     <div className=" px-12 md:px-14 pt-16 pb-16 search w-screen bg-cover bg-no-repeat overflow-x-hidden">
       <div className="flex flex-col text-white">
@@ -32,10 +25,13 @@ const navigate = useNavigate()
             id=""
             className="bg-white text-lg text-gray-500  rounded-full py-3 px-6 w-full md:w-[80vw] lg:w-[85vw] focus:outline-none dark:bg-gray-700 dark:text-gray-300"
             placeholder="Search for a movie, tv show, person.... "
-            onChange={(e)=>setSearchQuery(e.target.value)}
+            onChange={(e) => setSearchQuery(e.target.value)}
           />
         </form>
-        <button className=" -ml-12 bg-gradient-to-r from-green-400  to-cyan-500 py-3 px-6 rounded-full font-black text-white hover:text-black transition-all duration-200 ease-in-out " onClick={()=>navigate('/search-results')}>
+        <button
+          className=" -ml-12 bg-gradient-to-r from-green-400  to-cyan-500 py-3 px-6 rounded-full font-black text-white hover:text-black transition-all duration-200 ease-in-out "
+          onClick={() => navigate("/search-results")}
+        >
           Search
         </button>
       </div>

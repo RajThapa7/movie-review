@@ -1,28 +1,25 @@
-import React from "react";
-import axios from "axios";
-import { useState } from "react";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { BeatLoader } from "react-spinners";
 import tmdb from "../api/tmdb";
 import SingleCard from "./singleCard";
-import { BeatLoader } from "react-spinners";
 
 export default function TvList() {
   const [filter, setFilter] = useState();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     tmdb
       .get(`/tv/${filter}`)
       .then((res) => {
         setMovieList(res.data.results);
-        setLoading(false)
+        setLoading(false);
       })
       .catch((error) => console.log(error));
   }, [filter]);
   const [movieListTitle, setMovieListTitle] = useState();
   const [movieList, setMovieList] = useState([]);
-console.log(movieList);
+  console.log(movieList);
   return (
     <div className="py-10 dark:bg-gray-800 dark:text-gray-300">
       <form
@@ -55,7 +52,6 @@ console.log(movieList);
           />
           <label htmlFor="upcoming">On Air</label>
         </div>
-       
 
         <div className="inline-flex space-x-2">
           <input
@@ -90,35 +86,34 @@ console.log(movieList);
           <h2 className="text-2xl font-semibold px-10 md:px-20 ">
             {movieListTitle}
           </h2>
-          {loading?<div className="w-full h-[calc(100vh-20rem)] flex flex-col justify-center items-center">
-          
-          <BeatLoader
-            color="#277BD2"
-            size={20}
-            aria-label="Loading Spinner"
-            data-testid="loader"
-            className=" mx-auto  absolute "
-
-          />
-          </div>:
-          
-          <div className="md:px-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5  justify-items-center">
-            {movieList.map((item) => {
-              const { name, first_air_date, poster_path, id } = item;
-              const img = `https://image.tmdb.org/t/p/original${poster_path}`;
-              return (
-                <SingleCard
-                  key={id}
-                  title={name}
-                  releaseDate={first_air_date}
-                  img={img}
-                  movie_id={id}
-                  media_type='tv'
-                />
-              );
-            })}
-          </div>
-          }
+          {loading ? (
+            <div className="w-full h-[calc(100vh-20rem)] flex flex-col justify-center items-center">
+              <BeatLoader
+                color="#277BD2"
+                size={20}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+                className=" mx-auto  absolute "
+              />
+            </div>
+          ) : (
+            <div className="md:px-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5  justify-items-center">
+              {movieList.map((item) => {
+                const { name, first_air_date, poster_path, id } = item;
+                const img = `https://image.tmdb.org/t/p/original${poster_path}`;
+                return (
+                  <SingleCard
+                    key={id}
+                    title={name}
+                    releaseDate={first_air_date}
+                    img={img}
+                    movie_id={id}
+                    media_type="tv"
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
       ) : (
         <p className=" px-10 pb-2 text-red-500 font-bold text-lg">

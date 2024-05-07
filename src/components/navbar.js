@@ -1,13 +1,12 @@
-import React, { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
 import { BsSunFill } from "react-icons/bs";
-import { FaMoon, FaSearch } from "react-icons/fa";
 import { CgClose } from "react-icons/cg";
-import { useEffect } from "react";
+import { FaMoon, FaSearch } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 import { SearchContext } from "../App";
+
 export default function Navbar() {
   const { setSearchQuery } = useContext(SearchContext);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [top, setTop] = useState("");
   const [middle, setMiddle] = useState("bg-white");
   const [bottom, setBottom] = useState("");
@@ -19,7 +18,7 @@ export default function Navbar() {
   const theme = localStorage.getItem("theme");
 
   useEffect(() => {
-    if (theme == "dark") {
+    if (theme === "dark") {
       setDark(true);
       document.documentElement.classList.add("dark");
     } else {
@@ -196,7 +195,7 @@ export default function Navbar() {
           className="rounded-xl px-3 py-1 bg-white text-[#032541] self-center hover:scale-105 transition-all duration-300 ease-in"
           style={menuOpen ? { display: "flex" } : { display: "none" }}
         >
-          <a>Login</a>
+          Login
         </Link>
         <button style={menuOpen ? { display: "flex" } : { display: "none" }}>
           {dark ? (

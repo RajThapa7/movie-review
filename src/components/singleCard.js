@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import { BsPlusLg, BsThreeDots } from "react-icons/bs";
 import { FaHeart } from "react-icons/fa";
-import RatingCircle from "./ratingCircle";
-import { dateModifier } from "./dateModifier";
 import { Link } from "react-router-dom";
+import { dateModifier } from "./dateModifier";
+import RatingCircle from "./ratingCircle";
 
-export default function SingleCard({ title, releaseDate, img, movie_id, media_type, rating }) {
+export default function SingleCard({
+  title,
+  releaseDate,
+  img,
+  movie_id,
+  media_type,
+  rating,
+}) {
   const date = { releaseDate }.releaseDate;
   const [visible, setVisible] = useState(false);
   const handleMouseEnter = () => {
@@ -53,8 +60,7 @@ export default function SingleCard({ title, releaseDate, img, movie_id, media_ty
             to="/description"
             className="font-bold text-md hover:text-cyan-600 transition-all duration-150 ease-in-out"
             onClick={() => {
-              localStorage.setItem("id", `${movie_id}_${media_type}`)
-              ;
+              localStorage.setItem("id", `${movie_id}_${media_type}`);
             }}
           >
             {title}

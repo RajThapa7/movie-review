@@ -1,17 +1,14 @@
-import axios from "axios";
-import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { BeatLoader } from "react-spinners";
 import tmdb from "../api/tmdb";
 import SingleCard from "./singleCard";
-import { BeatLoader } from "react-spinners";
 
 export default function MovieList() {
   const [filter, setFilter] = useState();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     tmdb
       .get(`/movie/${filter}`)
       .then((res) => {
@@ -56,7 +53,6 @@ export default function MovieList() {
           />
           <label htmlFor="upcoming">Upcoming</label>
         </div>
-     
 
         <div className="inline-flex space-x-2">
           <input
@@ -91,39 +87,40 @@ export default function MovieList() {
           <h2 className="text-2xl font-semibold px-10 md:px-20 ">
             {movieListTitle}
           </h2>
-          {loading?
-          <div className="w-full h-[calc(100vh-20rem)] flex flex-col justify-center items-center">
-          
-          <BeatLoader
-            color="#277BD2"
-            size={20}
-            aria-label="Loading Spinner"
-            data-testid="loader"
-            className=" mx-auto  absolute "
-
-          />
-          </div>
-
-          :   <div className="md:px-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5  justify-items-center">
-          {movieList.map((item) => {
-            const { title, release_date, poster_path, id } = item;
-            const img = `https://image.tmdb.org/t/p/original${poster_path}`;
-            return (
-              <SingleCard
-                key={id}
-                title={title}
-                releaseDate={release_date}
-                img={img}
-                movie_id={id}
-                media_type='movie'
+          {loading ? (
+            <div className="w-full h-[calc(100vh-20rem)] flex flex-col justify-center items-center">
+              <BeatLoader
+                color="#277BD2"
+                size={20}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+                className=" mx-auto  absolute "
               />
-            );
-          })}
-        </div>}
-       
+            </div>
+          ) : (
+            <div className="md:px-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5  justify-items-center">
+              {movieList.map((item) => {
+                const { title, release_date, poster_path, id } = item;
+                const img = `https://image.tmdb.org/t/p/original${poster_path}`;
+                return (
+                  <SingleCard
+                    key={id}
+                    title={title}
+                    releaseDate={release_date}
+                    img={img}
+                    movie_id={id}
+                    media_type="movie"
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
       ) : (
-        <p className=" px-10 pb-2 text-red-500 font-bold text-lg"> * Select a filter to generate a list</p>
+        <p className=" px-10 pb-2 text-red-500 font-bold text-lg">
+          {" "}
+          * Select a filter to generate a list
+        </p>
       )}
     </div>
   );

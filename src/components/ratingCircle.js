@@ -1,9 +1,9 @@
-import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+
 export default function RatingCircle({ inlineStyle, rating }) {
   const [color, setColor] = useState();
   const dashOffset = (10 - rating) * 13.5;
+
   useEffect(() => {
     if (dashOffset >= 0 && dashOffset <= 40.5) {
       setColor("stroke-[#46b987]");
@@ -12,7 +12,8 @@ export default function RatingCircle({ inlineStyle, rating }) {
     } else {
       setColor("stroke-red-400");
     }
-  }, []);
+  }, [dashOffset]);
+
   return (
     <>
       <div className={`w-14 h-14 relative  left-3  ${inlineStyle}`}>

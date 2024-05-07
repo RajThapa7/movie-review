@@ -1,12 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { BsPlayFill } from "react-icons/bs";
-import Background from "../images/panther.webp";
-import { BsPlusLg, BsThreeDots } from "react-icons/bs";
+import { BsPlayFill, BsThreeDots } from "react-icons/bs";
 import { FaHeart, FaListUl } from "react-icons/fa";
-import { HiDotsCircleHorizontal } from "react-icons/hi";
 
-export default function TrailerCard({img, setBackground}) {
-    // const [background, setBackground] = useState('');
+export default function TrailerCard({ img, setBackground }) {
+  // const [background, setBackground] = useState('');
   const menuRef = useRef();
   useEffect(() => {
     const handler = (e) => {
@@ -27,10 +24,11 @@ export default function TrailerCard({img, setBackground}) {
   };
   return (
     <>
-      <div className="w-80  min-w-[20rem] relative"  >
+      <div className="w-80  min-w-[20rem] relative">
         <div
           className="w-80 h-44 min-w-[20rem] rounded-xl bg-black flex flex-col items-center justify-center  bg-cover bg-no-repeat relative hover:scale-105 transition-all duration-300 group"
-          style={myStyle} onMouseEnter={()=>setBackground(img)}
+          style={myStyle}
+          onMouseEnter={() => setBackground(img)}
         >
           <BsPlayFill className="text-white text-7xl font-bold group-hover:scale-125 transition-all duration-300 "></BsPlayFill>
           <BsThreeDots
@@ -45,22 +43,16 @@ export default function TrailerCard({img, setBackground}) {
           >
             <div className="inline-flex items-center space-x-3 border-b-[1px] border-gray-300  w-full py-2 pl-4 hover:bg-cyan-500  transition-all duration-100 ease-in-out group">
               <FaListUl></FaListUl>
-              <a
-                href="#"
-                className="text-gray-600 group-hover:text-white transition-all duration-100 ease-in-out"
-              >
+              <p className="text-gray-600 group-hover:text-white transition-all duration-100 ease-in-out">
                 Add to list
-              </a>
+              </p>
             </div>
             <div className="inline-flex items-center space-x-3 w-full py-2 pl-4 hover:bg-cyan-500 transition-all duration-100 ease-in-out group   ">
               <FaHeart></FaHeart>
 
-              <a
-                href="#"
-                className="text-gray-600 group-hover:text-white transition-all duration-100 ease-in-out"
-              >
+              <p className="text-gray-600 group-hover:text-white transition-all duration-100 ease-in-out">
                 Favorite
-              </a>
+              </p>
             </div>
           </div>
         )}

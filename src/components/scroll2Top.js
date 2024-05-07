@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { BsFillArrowUpCircleFill } from "react-icons/bs";
 import { Link } from "react-scroll";
 

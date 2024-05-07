@@ -46,8 +46,8 @@ export default function Trending() {
             let title;
             let release_date;
             const { poster_path, id, media_type, vote_average } = item;
-            media_type == "movie" ? (title = item.title) : (title = item.name);
-            media_type == "movie"
+            media_type === "movie" ? (title = item.title) : (title = item.name);
+            media_type === "movie"
               ? (release_date = item.release_date)
               : (release_date = item.first_air_date);
 

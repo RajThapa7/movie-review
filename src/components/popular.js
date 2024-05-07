@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { BeatLoader } from "react-spinners";
 import tmdb from "../api/tmdb";
 import SingleCard from "./singleCard";
 import SliderButton from "./sliderButton";
-import { BeatLoader } from "react-spinners";
 
 export default function Popular() {
   const [media, setMedia] = useState("tv");
@@ -21,7 +20,7 @@ export default function Popular() {
       })
       .catch((error) => console.log(error));
   }, [media]);
-  console.log(popular);
+
   return (
     <div className="dark:bg-gray-800 dark:text-gray-300">
       <div className="flex flex-row items-end pl-12 ">
@@ -50,7 +49,9 @@ export default function Popular() {
             let title;
             let release_date;
             media == "tv" ? (title = item.name) : (title = item.title);
-            media == "tv" ? (release_date = item.first_air_date) : (release_date = item.release_date);
+            media == "tv"
+              ? (release_date = item.first_air_date)
+              : (release_date = item.release_date);
 
             const img = `https://image.tmdb.org/t/p/original${poster_path}`;
 
